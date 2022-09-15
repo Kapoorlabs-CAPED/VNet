@@ -152,8 +152,12 @@ class VizOneat(object):
         elif self.voll_unet:
                 self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)   
         elif self.voll_care:
-                self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)                    
- 
+                self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)
+                
+                                    
+        self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
+        self.viewer.add_image(np.sum(self.smallimage, axis = 0), name= 'Image', blending= 'additive' )
+        self.smallimage = np.expand_dims(self.smallimage,0) 
         layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
         self.activation_model = models.Model(inputs= self.model.input, outputs=layer_outputs)
         self.activations = self.activation_model.predict(self.smallimage)
@@ -171,9 +175,7 @@ class VizOneat(object):
                  
         
         inputtime = int(self.size_tminus)
-        self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
-        self.viewer.add_image(np.sum(self.smallimage, axis = 0), name= 'Image', blending= 'additive' )
-        self.smallimage = np.expand_dims(self.smallimage,0) 
+        
         
     def VizActivations(self):
         
