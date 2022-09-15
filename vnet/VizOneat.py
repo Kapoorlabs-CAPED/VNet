@@ -154,7 +154,7 @@ class VizOneat(object):
         elif self.voll_care:
                 self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)
                 
-                                    
+        inputtime = int(self.size_tminus)                            
         self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
         self.viewer.add_image(np.sum(self.smallimage, axis = 0), name= 'Image', blending= 'additive' )
         self.smallimage = np.expand_dims(self.smallimage,0) 
@@ -174,7 +174,7 @@ class VizOneat(object):
         
                  
         
-        inputtime = int(self.size_tminus)
+        
         
         
     def VizActivations(self):
