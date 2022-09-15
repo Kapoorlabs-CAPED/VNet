@@ -160,6 +160,9 @@ class VizOneat(object):
         self.smallimage = np.expand_dims(self.smallimage,0) 
         layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
         self.activation_model = models.Model(inputs= self.model.input, outputs=layer_outputs)
+        
+        if self.oneat_vollnet:
+            self.VizVollNet()
         self.activations = self.activation_model.predict(self.smallimage)
         print(type(self.activations), len(self.activations))
         if self.layer_viz_start is None:

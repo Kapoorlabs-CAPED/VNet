@@ -25,6 +25,5 @@ for imagename in X:
      print(imagename)  
      viz_activations = VizOneat(None, imagename, model_dir, model_name, catconfig = catconfig, cordconfig = cordconfig, oneat_vollnet = True)
      viz_activations.PrepareNet()
-     viz_activations.VizVollNet()
      viz_activations.VizActivations()
 
