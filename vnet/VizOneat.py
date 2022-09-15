@@ -187,12 +187,13 @@ class VizOneat(object):
             
             print(max_activation.shape,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1])
             if len(max_activation.shape) == 4:
-               max_activation = np.pad(max_activation, (0,0,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
+               max_activation_new = np.pad(max_activation, (0,0,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
             if len(max_activation.shape) == 3:
-                max_activation = np.pad(max_activation, (0,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
+                max_activation_new = np.pad(max_activation, (0,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
             if len(max_activation.shape) == 2:
-                max_activation = np.pad(max_activation, (self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
-            
+                max_activation_new = np.pad(max_activation, (self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
+            print(max_activation_new.shape)
+            max_activation = max_activation_new
             self.all_max_activations.append(max_activation)
             
         self.all_max_activations = np.array(self.all_max_activations)    
