@@ -23,14 +23,7 @@ setup(
     long_description_content_type='text/markdown',
     install_requires=[
         
-        "keras",
-        "tensorflow",
-        "scipy",
-        "tifffile",
-        "matplotlib",
-        "imagecodecs",
-        "napari[all]",
-        
+        "oneat",
        
     ],
     packages=setuptools.find_packages(),
