@@ -153,7 +153,9 @@ class VizOneat(object):
                 self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)   
         elif self.voll_care:
                 self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)                    
-
+ 
+        layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
+        self.activation_model = models.Model(inputs= self.model.input, outputs=layer_outputs)
         self.activations = self.activation_model.predict(self.smallimage)
         print(type(self.activations), len(self.activations))
         if self.layer_viz_start is None:
@@ -167,8 +169,7 @@ class VizOneat(object):
         assert self.layer_viz_end > self.layer_viz_start, f'The end layer {self.layer_viz_end} of activation should be greater than start layer {self.layer_viz_start}'
         
                  
-        layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
-        self.activation_model = models.Model(inputs= self.model.input, outputs=layer_outputs)
+        
         inputtime = int(self.size_tminus)
         self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
         self.viewer.add_image(np.sum(self.smallimage, axis = 0), name= 'Image', blending= 'additive' )
