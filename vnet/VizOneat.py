@@ -193,6 +193,7 @@ class VizOneat(object):
             if len(max_activation.shape) == 2:
                 max_activation_new = np.pad(max_activation, ((0,self.pad_width[0]), (0,self.pad_width[1])))
             max_activation = max_activation_new
+            print(max_activation.shape)
             self.all_max_activations.append(max_activation)
             
         self.all_max_activations = np.array(self.all_max_activations)    
