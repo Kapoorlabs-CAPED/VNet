@@ -1,10 +1,8 @@
 import os
 import sys
 import tensorflow as tf
-from tqdm import tqdm
-from oneat.NEATModels import nets
 from oneat.NEATModels.nets import Concat
-from oneat.NEATModels.loss import diamond_yolo_loss
+from oneat.NEATModels.loss import diamond_yolo_loss, class_yolo_loss, static_yolo_loss_segfree,static_yolo_loss, dynamic_yolo_loss
 from pathlib import Path
 from oneat.NEATUtils.utils import  load_json, normalizeFloatZeroOne
 import numpy as np
@@ -12,10 +10,13 @@ from keras import models
 from keras.models import load_model
 from tifffile import imread
 import napari
-
+from vollseg import VollSeg, CARE, UNET, StarDist2D, StarDist3D, MASKUNET
 class VizOneat(object):
 
-    def __init__(self,  config, imagename, model_dir, model_name, model_keras, catconfig=None, cordconfig=None, timepoints = 4, layer_viz_start = 10, layer_viz_end = 20, dtype = np.uint8, n_tiles = (1,1,1), normalize = True):
+    def __init__(self,  config, imagename, model_dir, model_name, oneat_vollnet = True,
+                 oneat_lstmnet = False, oneat_cnnnet = False, oneat_staticnet = False,
+                 voll_starnet_2D = False, voll_starnet_3D = False, voll_unet = False, voll_care = False,
+                 catconfig=None, cordconfig=None, layer_viz_start = None, layer_viz_end = None, dtype = np.uint8, n_tiles = (1,1,1), normalize = True):
 
         self.config = config
         self.model_dir = model_dir
@@ -23,14 +24,20 @@ class VizOneat(object):
         self.n_tiles = n_tiles
         self.imagename = imagename
         self.dtype = dtype
-        self.timepoints = timepoints
         self.catconfig = catconfig
         self.cordconfig = cordconfig
+        self.oneat_vollnet = oneat_vollnet 
+        self.oneat_lstmnet = oneat_lstmnet 
+        self.oneat_cnnnet = oneat_cnnnet 
+        self.oneat_staticnet = oneat_staticnet
+        self.voll_starnet_2D = voll_starnet_2D
+        self.voll_starnet_3D = voll_starnet_3D
+        self.voll_unet = voll_unet
+        self.voll_care = voll_care
         self.layer_viz_start = layer_viz_start 
         self.layer_viz_end = layer_viz_end
         self.image = imread(imagename).astype(self.dtype)
         self.normalize = normalize
-        self.model_keras = model_keras
         self.viewer = napari.Viewer()   
         self.dictact = {}
         if self.config != None:
@@ -104,18 +111,55 @@ class VizOneat(object):
             self.yolo_v1 = self.config['yolo_v1']
             self.yolo_v2 = self.config['yolo_v2']
             self.stride = self.config['stride']
+        if self.multievent == True:
+                self.entropy = 'binary'
+
+        if self.multievent == False:
+            self.entropy = 'notbinary'
 
     def PrepareNet(self):
-        self.yololoss = diamond_yolo_loss(self.categories, self.gridx, self.gridy, self.gridz, self.nboxes,
-                                          self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
-
+        
         if self.normalize: 
             self.image = normalizeFloatZeroOne(self.image, 1, 99.8, dtype = self.dtype)
-       
-        self.model = load_model(os.path.join(self.model_dir, self.model_name) + '.h5',
-                                custom_objects={'loss': self.yololoss, 'Concat': Concat})    
+            
+        if self.oneat_vollnet:    
+            self.yololoss = diamond_yolo_loss(self.categories, self.gridx, self.gridy, self.gridz, self.nboxes,
+                                            self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
+        
+        if self.oneat_cnnnet:
+            self.yololoss = static_yolo_loss(self.categories, self.gridx, self.gridy, self.nboxes, self.box_vector,
+                                                        self.entropy, self.yolo_v0)
+        
+        if self.oneat_lstmnet:
+            self.yololoss = dynamic_yolo_loss(self.categories, self.gridx, self.gridy, self.gridt, self.nboxes,
+                                          self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
 
+        if self.oneat_staticnet:
+            self.yololoss = static_yolo_loss(self.categories, self.gridx, self.gridy, self.nboxes, self.box_vector,
+                                                        self.entropy, self.yolo_v0)
 
+        
+        
+            
+        
+        if self.oneat_cnnnet or self.oneat_lstmnet or self.oneat_staticnet or self.oneat_vollnet:
+                self.model = load_model(os.path.join(self.model_dir, self.model_name) + '.h5',
+                                custom_objects={'loss': self.yololoss, 'Concat': Concat}) 
+        elif self.voll_starnet_2D:
+                self.model =  StarDist2D(None, name=self.model_name, basedir=self.model_dir)         
+        elif self.voll_starnet_3D:
+                self.model =  StarDist3D(None, name=self.model_name, basedir=self.model_dir)     
+        elif self.voll_unet:
+                self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)   
+        elif self.voll_care:
+                self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)                    
+
+        self.activations = self.activation_model.predict(self.smallimage)
+        print(type(self.activations), len(self.activations))
+        if self.layer_viz_start is None:
+            self.layer_viz_start = 0 
+        if self.layer_viz_end is None:
+            self.layer_viz_end = len(self.activations)    
         layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
         self.activation_model = models.Model(inputs= self.model.input, outputs=layer_outputs)
         inputtime = int(self.size_tminus)
@@ -124,9 +168,8 @@ class VizOneat(object):
         self.smallimage = np.expand_dims(self.smallimage,0) 
         
     def VizActivations(self):
-        activations = self.activation_model.predict(self.smallimage)
-        print(type(activations), len(activations))
-        for count, activation in enumerate(activations):
+        
+        for count, activation in enumerate(self.activations):
             max_activation = np.sum(activation, axis = -1)
             self.viewer.add_image(max_activation, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
 
