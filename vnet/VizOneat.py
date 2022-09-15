@@ -184,7 +184,8 @@ class VizOneat(object):
         
         for count, activation in enumerate(self.activations):
             max_activation = np.sum(activation, axis = -1)
-            print(max_activation.shape)
+            
+            print(max_activation.shape,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1])
             if len(max_activation.shape) == 4:
                max_activation = np.pad(max_activation, (0,0,self.pad_width[0] - max_activation.shape[-2], self.pad_width[1] - max_activation.shape[-1]))
             if len(max_activation.shape) == 3:
