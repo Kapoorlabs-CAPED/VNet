@@ -2,14 +2,14 @@
 # coding: utf-8
 import os
 import glob
-from VizOneat import VizOneat
+from vnet.VizOneat import VizOneat
 from oneat.NEATUtils.utils import load_json
 event_threshold = 0.9
 event_confidence = 0.9
 normalize = True
 nms_function = 'iou'
 
-imagedir = '/mnt/WorkHorse/Mari_Data_Oneat/raw/gt/'
+imagedir = '/mnt/WorkHorse/Mari_Data_Oneat/raw/gt/viz/'
 model_dir = '/mnt/WorkHorse/Mari_Models/Oneat/'
 model_name = 'Cellsplitdetectorxenopusvolumecnn_d101'
 
