@@ -204,7 +204,7 @@ class VizOneat(object):
                max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0] - max_activation.shape[-3]),(0,self.pad_width[1] - max_activation.shape[-2]), (0,self.pad_width[2]- max_activation.shape[-1])))
                display_image = np.zeros([len(self.all_max_activations),self.image.shape[1],self.image.shape[2],self.image.shape[3]])
                for i in range(len(self.all_max_activations) - self.image.shape[0]):
-                    display_image[i,i+self.image.shape[0],:,:,:] = self.image
+                    display_image[i:i+self.image.shape[0],:,:,:] = self.image
             if len(max_activation.shape) == 3:
                 max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0]- max_activation.shape[-2]), (0,self.pad_width[1]- max_activation.shape[-1])))
             if len(max_activation.shape) == 2:
