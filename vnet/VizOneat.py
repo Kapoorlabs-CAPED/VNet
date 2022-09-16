@@ -212,7 +212,7 @@ class VizOneat(object):
         self.all_max_activations = np.array(self.all_max_activations)    
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
-        self.viewer.add_image(self.smallimage, name= 'Image', blending= 'additive' )
+        self.viewer.add_image(np.array(self.smallimage), name= 'Image', blending= 'additive' )
         napari.run()
             
     def VizVollNet(self):
