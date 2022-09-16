@@ -170,7 +170,7 @@ class VizOneat(object):
                 
         inputtime = int(self.size_tminus)                            
         self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
-        self.viewer.add_image(np.sum(self.smallimage, axis = 0), name= 'Image', blending= 'additive' )
+        
         self.smallimage = np.expand_dims(self.smallimage,0) 
         layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
         self.activation_model = models.Model(inputs= self.model.input, outputs=layer_outputs)
@@ -212,7 +212,7 @@ class VizOneat(object):
         self.all_max_activations = np.array(self.all_max_activations)    
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
-
+        self.viewer.add_image(self.smallimage, name= 'Image', blending= 'additive' )
         napari.run()
             
     def VizVollNet(self):
