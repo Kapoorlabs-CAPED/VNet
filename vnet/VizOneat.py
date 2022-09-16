@@ -202,7 +202,7 @@ class VizOneat(object):
             max_activation = normalizeFloatZeroOne(max_activation, 1, 99.8, dtype = self.dtype)
             if len(max_activation.shape) == 4:
                if count == len(self.activations) - 1:  
-                   print(max_activation.shape, max_activation[0,0,0,:])  
+                   print(max_activation.shape, max_activation)  
                max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0] - max_activation.shape[-3]),(0,self.pad_width[1] - max_activation.shape[-2]), (0,self.pad_width[2]- max_activation.shape[-1])))
                
             if len(max_activation.shape) == 3:
