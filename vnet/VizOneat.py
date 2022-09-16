@@ -203,13 +203,19 @@ class VizOneat(object):
             max_activation = np.sum(activation, axis = -1)
             max_activation = normalizeFloatZeroOne(max_activation, 1, 99.8, dtype = self.dtype)
             if len(max_activation.shape) == 4:
-               
-               max_activation_new = np.pad(max_activation, ((0,0),((self.pad_width[0] - max_activation.shape[-3])//2,(self.pad_width[0] - max_activation.shape[-3])//2),((self.pad_width[1] - max_activation.shape[-2])//2,(self.pad_width[1] - max_activation.shape[-2])//2), ((self.pad_width[2]- max_activation.shape[-1])//2,(self.pad_width[2]- max_activation.shape[-1]))//2))
+               padz = (self.pad_width[0] - max_activation.shape[-3])//2
+               pady = (self.pad_width[1] - max_activation.shape[-2])//2
+               padx = (self.pad_width[2]- max_activation.shape[-1])//2
+               max_activation_new = np.pad(max_activation, ((0,0),(padz,padz),(pady,pady), (padx,padx)))
                
             if len(max_activation.shape) == 3:
-                max_activation_new = np.pad(max_activation, ((0,0),((self.pad_width[0]- max_activation.shape[-2])//2,(self.pad_width[0]- max_activation.shape[-2])//2), ((self.pad_width[1]- max_activation.shape[-1])//2,(self.pad_width[1]- max_activation.shape[-1])//2)))
+                pady = (self.pad_width[0] - max_activation.shape[-2])//2
+                padx = (self.pad_width[1]- max_activation.shape[-1])//2
+                max_activation_new = np.pad(max_activation, ((0,0),(pady,pady), (padx,padx)))
             if len(max_activation.shape) == 2:
-                max_activation_new = np.pad(max_activation, (((self.pad_width[0]- max_activation.shape[-2])//2,(self.pad_width[0]- max_activation.shape[-2])//2), ((self.pad_width[1]- max_activation.shape[-1])//2,(self.pad_width[1]- max_activation.shape[-1])//2)))
+                pady = (self.pad_width[0] - max_activation.shape[-2])//2
+                padx = (self.pad_width[1]- max_activation.shape[-1])//2
+                max_activation_new = np.pad(max_activation, ((pady,pady), (padx,padx)))
             max_activation = np.sum(max_activation_new, axis = 0)
             
             self.all_max_activations.append(max_activation)
