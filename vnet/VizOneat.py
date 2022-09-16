@@ -122,36 +122,50 @@ class VizOneat(object):
         if self.normalize: 
             self.image = normalizeFloatZeroOne(self.image, 1, 99.8, dtype = self.dtype)
             
-        if self.oneat_vollnet:    
+        if self.oneat_vollnet:  
+            self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1])  
             self.yololoss = diamond_yolo_loss(self.categories, self.gridx, self.gridy, self.gridz, self.nboxes,
                                             self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
         
         if self.oneat_cnnnet:
+            self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
             self.yololoss = static_yolo_loss(self.categories, self.gridx, self.gridy, self.nboxes, self.box_vector,
                                                         self.entropy, self.yolo_v0)
         
         if self.oneat_lstmnet:
+            self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
             self.yololoss = dynamic_yolo_loss(self.categories, self.gridx, self.gridy, self.gridt, self.nboxes,
                                           self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
 
         if self.oneat_staticnet:
+            self.pad_width = (self.image.shape[-2], self.image.shape[-1]) 
             self.yololoss = static_yolo_loss(self.categories, self.gridx, self.gridy, self.nboxes, self.box_vector,
                                                         self.entropy, self.yolo_v0)
 
         
         
-        self.pad_width = (self.image.shape[-2], self.image.shape[-1]) 
+         
         
         if self.oneat_cnnnet or self.oneat_lstmnet or self.oneat_staticnet or self.oneat_vollnet:
                 self.model = load_model(os.path.join(self.model_dir, self.model_name) + '.h5',
                                 custom_objects={'loss': self.yololoss, 'Concat': Concat}) 
         elif self.voll_starnet_2D:
+                self.pad_width = (self.image.shape[-2], self.image.shape[-1]) 
                 self.model =  StarDist2D(None, name=self.model_name, basedir=self.model_dir)         
         elif self.voll_starnet_3D:
+                self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 self.model =  StarDist3D(None, name=self.model_name, basedir=self.model_dir)     
         elif self.voll_unet:
+                if len(self.image.shape >=3):
+                     self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
+                else:
+                     self.pad_width = (self.image.shape[-2], self.image.shape[-1])      
                 self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)   
         elif self.voll_care:
+                if len(self.image.shape >=3):
+                     self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
+                else:
+                     self.pad_width = (self.image.shape[-2], self.image.shape[-1])
                 self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)
                 
         inputtime = int(self.size_tminus)                            
@@ -187,12 +201,12 @@ class VizOneat(object):
             
             print(max_activation.shape)
             if len(max_activation.shape) == 4:
-               max_activation_new = np.pad(max_activation, ((0,0),(0,0),(0,self.pad_width[0] - max_activation.shape[-2]), (0,self.pad_width[1]- max_activation.shape[-1])))
+               max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0] - max_activation.shape[-3]),(0,self.pad_width[1] - max_activation.shape[-2]), (0,self.pad_width[2]- max_activation.shape[-1])))
             if len(max_activation.shape) == 3:
                 max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0]- max_activation.shape[-2]), (0,self.pad_width[1]- max_activation.shape[-1])))
             if len(max_activation.shape) == 2:
                 max_activation_new = np.pad(max_activation, ((0,self.pad_width[0]- max_activation.shape[-2]), (0,self.pad_width[1]- max_activation.shape[-1])))
-            max_activation = max_activation_new
+            max_activation = np.sum(max_activation_new, axis = 0)
             print(max_activation.shape)
             self.all_max_activations.append(max_activation)
             
