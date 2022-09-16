@@ -203,9 +203,9 @@ class VizOneat(object):
             max_activation = np.sum(activation, axis = -1)
             max_activation = normalizeFloatZeroOne(max_activation, 1, 99.8, dtype = self.dtype)
             if len(max_activation.shape) == 4:
-               padz = round((self.pad_width[0] - max_activation.shape[-3]))/2
-               pady = round((self.pad_width[1] - max_activation.shape[-2]))/2
-               padx = round((self.pad_width[2]- max_activation.shape[-1]))/2
+               padz = int(round((self.pad_width[0] - max_activation.shape[-3]))/2)
+               pady = int(round((self.pad_width[1] - max_activation.shape[-2]))/2)
+               padx = int(round((self.pad_width[2]- max_activation.shape[-1]))/2)
                
                max_activation_new = np.pad(max_activation, ((0,0),(padz,padz),(pady,pady), (padx,padx)))
                print(max_activation_new.shape)
