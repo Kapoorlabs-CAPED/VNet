@@ -214,7 +214,7 @@ class VizOneat(object):
             
         self.all_max_activations = np.array(self.all_max_activations)    
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
-        display_image = np.expand_dims(self.image)
+        display_image = np.expand_dims(self.image, 0)
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
         self.viewer.add_image(display_image, name= 'Image', blending= 'additive' )
         napari.run()
