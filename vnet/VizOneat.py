@@ -123,7 +123,7 @@ class VizOneat(object):
             self.image = normalizeFloatZeroOne(self.image, 1, 99.8, dtype = self.dtype)
             
         if self.oneat_vollnet: 
-            self.image = np.reshape(self.image, (3,8,64,64)) 
+            
             self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1])  
             self.yololoss = diamond_yolo_loss(self.categories, self.gridx, self.gridy, self.gridz, self.nboxes,
                                             self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
@@ -219,7 +219,7 @@ class VizOneat(object):
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
        
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
-        self.viewer.add_image(self.image, name= 'Image', blending= 'additive' )
+        self.viewer.add_image(np.reshape(self.image, (8,3,64,64)), name= 'Image', blending= 'additive' )
         napari.run()
             
     def VizVollNet(self):
