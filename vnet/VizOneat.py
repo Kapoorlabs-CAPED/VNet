@@ -210,11 +210,12 @@ class VizOneat(object):
             if len(max_activation.shape) == 2:
                 max_activation_new = np.pad(max_activation, ((0,self.pad_width[0]- max_activation.shape[-2]), (0,self.pad_width[1]- max_activation.shape[-1])))
             max_activation = np.sum(max_activation_new, axis = 0)
-            max_activation = normalizeFloatZeroOne(max_activation, 1, 99.8, dtype = self.dtype)
+            
             self.all_max_activations.append(max_activation)
             
             
         self.all_max_activations = np.array(self.all_max_activations)    
+        self.all_max_activations = normalizeFloatZeroOne(self.all_max_activations, 1, 99.8, dtype = self.dtype)
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
         display_image = np.swapaxes(display_image, 0, 1)
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
