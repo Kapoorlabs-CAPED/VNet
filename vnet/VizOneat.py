@@ -168,7 +168,8 @@ class VizOneat(object):
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])
                 self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)
                 
-        inputtime = int(self.size_tminus)                            
+        inputtime = int(self.size_tminus)   
+                                 
         self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
         
         self.smallimage = np.expand_dims(self.smallimage,0) 
@@ -201,6 +202,9 @@ class VizOneat(object):
             
             if len(max_activation.shape) == 4:
                max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0] - max_activation.shape[-3]),(0,self.pad_width[1] - max_activation.shape[-2]), (0,self.pad_width[2]- max_activation.shape[-1])))
+               display_image = np.zeros([len(self.all_max_activations),self.image.shape[1],self.image.shape[2],self.image.shape[3]])
+               for i in range(len(self.all_max_activations) - self.image.shape[0]):
+                    display_image[i,i+self.image.shape[0],:,:,:] = self.image
             if len(max_activation.shape) == 3:
                 max_activation_new = np.pad(max_activation, ((0,0),(0,self.pad_width[0]- max_activation.shape[-2]), (0,self.pad_width[1]- max_activation.shape[-1])))
             if len(max_activation.shape) == 2:
@@ -209,10 +213,11 @@ class VizOneat(object):
             max_activation = normalizeFloatZeroOne(max_activation, 1, 99.8, dtype = self.dtype)
             self.all_max_activations.append(max_activation)
             
+            
         self.all_max_activations = np.array(self.all_max_activations)    
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
-        self.viewer.add_image(np.array(self.smallimage), name= 'Image', blending= 'additive' )
+        self.viewer.add_image(display_image, name= 'Image', blending= 'additive' )
         napari.run()
             
     def VizVollNet(self):
