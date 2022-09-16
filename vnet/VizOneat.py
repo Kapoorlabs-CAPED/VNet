@@ -211,7 +211,7 @@ class VizOneat(object):
             
             self.all_max_activations.append(max_activation)
             
-            
+        f'Last layer value {max_activation}'    
         self.all_max_activations = np.array(self.all_max_activations)    
         self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
        
