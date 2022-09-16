@@ -222,7 +222,7 @@ class VizOneat(object):
                 padx = (self.pad_width[1]- max_activation.shape[-1])//2
                 max_activation_new = np.pad(max_activation, ((pady,pady), (padx,padx)))
                 if max_activation_new.shape[0] < self.image.shape[0]:
-                   max_activation_new = np.pad(max_activation_new, (((0,1), (0,1)))
+                   max_activation_new = np.pad(max_activation_new, (((0,1), (0,1))))
             max_activation = np.sum(max_activation_new, axis = 0)
             
             self.all_max_activations.append(max_activation)
