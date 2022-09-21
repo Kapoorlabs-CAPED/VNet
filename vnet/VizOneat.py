@@ -234,9 +234,9 @@ class VizOneat(object):
             self.all_max_activations.append(max_activation)
             
           
-        self.all_max_activations = np.array(self.all_max_activations)    
+        self.all_max_activations = np.array(self.all_max_activations)   
+        self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1) 
         if self.oneat_cnnnet or self.oneat_lstmnet or self.oneat_vollnet or self.oneat_staticnet:
-          self.all_max_activations = np.swapaxes(self.all_max_activations, 0,1)
           self.image = np.swapaxes(self.image, 0,1)
         print(self.image.shape, self.all_max_activations.shape)
         self.viewer.add_image(self.all_max_activations, name= 'Activation' + str(count), blending= 'additive', colormap='inferno' )
