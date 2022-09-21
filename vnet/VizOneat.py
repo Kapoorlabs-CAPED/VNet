@@ -149,18 +149,28 @@ class VizOneat(object):
                 self.model = load_model(os.path.join(self.model_dir, self.model_name) + '.h5',
                                 custom_objects={'loss': self.yololoss, 'Concat': Concat}) 
         elif self.voll_starnet_2D:
+                if len(self.image.shape) == 4:
+                    self.image = self.image[0,0,:,:]
+                if len(self.image.shape) == 3:
+                    self.image = self.image[0,:,:]     
                 self.pad_width = (self.image.shape[-2], self.image.shape[-1]) 
                 self.model =  StarDist2D(None, name=self.model_name, basedir=self.model_dir)._build()         
         elif self.voll_starnet_3D:
+                if len(self.image.shape) == 4:
+                    self.image = self.image[0,:,:,:]
                 self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 self.model =  StarDist3D(None, name=self.model_name, basedir=self.model_dir)._build()     
         elif self.voll_unet:
+                if len(self.image.shape) == 4:
+                    self.image = self.image[0,:,:,:]
                 if len(self.image.shape >=3):
                      self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 else:
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])      
                 self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)._build()  
         elif self.voll_care:
+                if len(self.image.shape) == 4:
+                    self.image = self.image[0,:,:,:]
                 if len(self.image.shape >=3):
                      self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 else:
