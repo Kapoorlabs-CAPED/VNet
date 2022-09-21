@@ -75,42 +75,40 @@ class VizOneat(object):
             self.yolo_v2 = config.yolo_v2
             self.stride = config.stride
         if self.config == None:
-            if self.oneat_vollnet: 
-               self.config = load_json(os.path.join(self.model_dir, self.model_name) + '_Parameter.json')
-            
-
-            self.npz_directory = self.config['npz_directory']
-            self.npz_name = self.config['npz_name']
-            self.npz_val_name = self.config['npz_val_name']
-            self.key_categories = self.catconfig
-            self.box_vector = self.config['box_vector']
-            self.show = self.config['show']
-            self.key_cord = self.cordconfig
-            self.categories = len(self.catconfig)
-            self.depth = self.config['depth']
-            self.start_kernel = self.config['start_kernel']
-            self.mid_kernel = self.config['mid_kernel']
-            self.learning_rate = self.config['learning_rate']
-            self.epochs = self.config['epochs']
-            self.startfilter = self.config['startfilter']
-            self.batch_size = self.config['batch_size']
-            self.multievent = self.config['multievent']
-            self.imagex = self.config['imagex']
-            self.imagey = self.config['imagey']
-            self.imagez = self.config['imagez']
-            self.imaget = self.config['size_tminus'] + self.config['size_tplus'] + 1
-            self.size_tminus = self.config['size_tminus']
-            self.size_tplus = self.config['size_tplus']
-            self.nboxes = self.config['nboxes']
-            self.stage_number = self.config['stage_number']
-            self.last_conv_factor = 2 ** (self.stage_number - 1)
-            self.gridx = 1
-            self.gridy = 1
-            self.gridz = 1
-            self.yolo_v0 = self.config['yolo_v0']
-            self.yolo_v1 = self.config['yolo_v1']
-            self.yolo_v2 = self.config['yolo_v2']
-            self.stride = self.config['stride']
+            if self.oneat_vollnet or self.oneat_lstmnet or self.oneat_cnnnet or self.oneat_staticnet: 
+                self.config = load_json(os.path.join(self.model_dir, self.model_name) + '_Parameter.json')
+                self.npz_directory = self.config['npz_directory']
+                self.npz_name = self.config['npz_name']
+                self.npz_val_name = self.config['npz_val_name']
+                self.key_categories = self.catconfig
+                self.box_vector = self.config['box_vector']
+                self.show = self.config['show']
+                self.key_cord = self.cordconfig
+                self.categories = len(self.catconfig)
+                self.depth = self.config['depth']
+                self.start_kernel = self.config['start_kernel']
+                self.mid_kernel = self.config['mid_kernel']
+                self.learning_rate = self.config['learning_rate']
+                self.epochs = self.config['epochs']
+                self.startfilter = self.config['startfilter']
+                self.batch_size = self.config['batch_size']
+                self.multievent = self.config['multievent']
+                self.imagex = self.config['imagex']
+                self.imagey = self.config['imagey']
+                self.imagez = self.config['imagez']
+                self.imaget = self.config['size_tminus'] + self.config['size_tplus'] + 1
+                self.size_tminus = self.config['size_tminus']
+                self.size_tplus = self.config['size_tplus']
+                self.nboxes = self.config['nboxes']
+                self.stage_number = self.config['stage_number']
+                self.last_conv_factor = 2 ** (self.stage_number - 1)
+                self.gridx = 1
+                self.gridy = 1
+                self.gridz = 1
+                self.yolo_v0 = self.config['yolo_v0']
+                self.yolo_v1 = self.config['yolo_v1']
+                self.yolo_v2 = self.config['yolo_v2']
+                self.stride = self.config['stride']
         if self.multievent == True:
                 self.entropy = 'binary'
 
