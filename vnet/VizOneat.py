@@ -163,7 +163,7 @@ class VizOneat(object):
         elif self.voll_unet:
                 if len(self.image.shape) == 4:
                     self.image = self.image[0,:,:,:]
-                if len(self.image.shape >=3):
+                if len(self.image.shape) >=3:
                      self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 else:
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])      
@@ -171,7 +171,7 @@ class VizOneat(object):
         elif self.voll_care:
                 if len(self.image.shape) == 4:
                     self.image = self.image[0,:,:,:]
-                if len(self.image.shape >=3):
+                if len(self.image.shape) >=3:
                      self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 else:
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])
