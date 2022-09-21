@@ -150,22 +150,22 @@ class VizOneat(object):
                                 custom_objects={'loss': self.yololoss, 'Concat': Concat}) 
         elif self.voll_starnet_2D:
                 self.pad_width = (self.image.shape[-2], self.image.shape[-1]) 
-                self.model =  StarDist2D(None, name=self.model_name, basedir=self.model_dir)         
+                self.model =  StarDist2D(None, name=self.model_name, basedir=self.model_dir)._build()         
         elif self.voll_starnet_3D:
                 self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
-                self.model =  StarDist3D(None, name=self.model_name, basedir=self.model_dir)     
+                self.model =  StarDist3D(None, name=self.model_name, basedir=self.model_dir)._build()     
         elif self.voll_unet:
                 if len(self.image.shape >=3):
                      self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 else:
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])      
-                self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)   
+                self.model =  UNET(None, name=self.model_name, basedir=self.model_dir)._build()  
         elif self.voll_care:
                 if len(self.image.shape >=3):
                      self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
                 else:
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])
-                self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)
+                self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)._build()
                 
                                  
         self.smallimage = self.image
