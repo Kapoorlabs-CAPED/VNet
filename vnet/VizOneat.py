@@ -222,14 +222,16 @@ class VizOneat(object):
                 pady = (self.pad_width[0] - max_activation.shape[-2])//2
                 padx = (self.pad_width[1]- max_activation.shape[-1])//2
                 max_activation_new = np.pad(max_activation, ((0,0),(pady,pady), (padx,padx)))
-                if max_activation_new.shape[1] < self.image.shape[1]:
-                   max_activation_new = np.pad(max_activation_new, ((0,0),(0,1), (0,1)))
+                if self.oneat_cnnnet or self.oneat_lstmnet or self.oneat_staticnet or self.oneat_vollnet:
+                   if max_activation_new.shape[1] < self.image.shape[1]:
+                     max_activation_new = np.pad(max_activation_new, ((0,0),(0,1), (0,1)))
             if len(max_activation.shape) == 2:
                 pady = (self.pad_width[0] - max_activation.shape[-2])//2
                 padx = (self.pad_width[1]- max_activation.shape[-1])//2
                 max_activation_new = np.pad(max_activation, ((pady,pady), (padx,padx)))
-                if max_activation_new.shape[0] < self.image.shape[0]:
-                   max_activation_new = np.pad(max_activation_new, (((0,1), (0,1))))
+                if self.oneat_cnnnet or self.oneat_lstmnet or self.oneat_staticnet or self.oneat_vollnet
+                  if max_activation_new.shape[0] < self.image.shape[0]:
+                     max_activation_new = np.pad(max_activation_new, (((0,1), (0,1))))
             print(max_activation_new.shape)       
             max_activation = np.sum(max_activation_new, axis = 0)
             
