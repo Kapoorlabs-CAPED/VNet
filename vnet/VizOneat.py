@@ -206,6 +206,7 @@ class VizOneat(object):
     def VizActivations(self):
         
         for count, activation in enumerate(self.activations):
+            print(activation.shape)
             max_activation = np.sum(activation, axis = -1)
             max_activation = normalizeFloatZeroOne(max_activation, 1, 99.8, dtype = self.dtype)
             if len(max_activation.shape) == 4:
