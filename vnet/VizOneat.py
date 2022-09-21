@@ -167,9 +167,8 @@ class VizOneat(object):
                      self.pad_width = (self.image.shape[-2], self.image.shape[-1])
                 self.model =  CARE(None, name=self.model_name, basedir=self.model_dir)
                 
-        inputtime = int(self.size_tminus)   
                                  
-        self.smallimage = CreateVolume(self.image, self.size_tminus, self.size_tplus, inputtime)
+        self.smallimage = self.image
         
         self.smallimage = np.expand_dims(self.smallimage,0) 
         layer_outputs = [layer.output for layer in self.model.layers[self.layer_viz_start:self.layer_viz_end]]
