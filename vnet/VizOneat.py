@@ -13,7 +13,7 @@ import napari
 from vollseg import VollSeg, CARE, UNET, StarDist2D, StarDist3D, MASKUNET
 class VizOneat(object):
 
-    def __init__(self,  config, imagename, model_dir, model_name, oneat_vollnet = True,
+    def __init__(self,  config, imagename, model_dir, model_name, oneat_vollnet = False,
                  oneat_lstmnet = False, oneat_cnnnet = False, oneat_staticnet = False,
                  voll_starnet_2D = False, voll_starnet_3D = False, voll_unet = False, voll_care = False,
                  catconfig=None, cordconfig=None, layer_viz_start = None, layer_viz_end = None, dtype = np.uint8, n_tiles = (1,1,1), normalize = True):
@@ -75,8 +75,8 @@ class VizOneat(object):
             self.yolo_v2 = config.yolo_v2
             self.stride = config.stride
         if self.config == None:
-
-            self.config = load_json(os.path.join(self.model_dir, self.model_name) + '_Parameter.json')
+            if self.oneat_vollnet: 
+               self.config = load_json(os.path.join(self.model_dir, self.model_name) + '_Parameter.json')
             
 
             self.npz_directory = self.config['npz_directory']

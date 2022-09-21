@@ -11,7 +11,7 @@ with open(path.join(_dir,'vnet','_version.py'), encoding="utf-8") as f:
     exec(f.read())
 
 setup(
-    name="vnet",
+    name="viz-oneat",
 
     version=__version__,
 
