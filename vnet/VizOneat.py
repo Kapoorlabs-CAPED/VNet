@@ -109,11 +109,11 @@ class VizOneat(object):
                 self.yolo_v1 = self.config['yolo_v1']
                 self.yolo_v2 = self.config['yolo_v2']
                 self.stride = self.config['stride']
-            if self.multievent == True:
-                    self.entropy = 'binary'
+                if self.multievent == True:
+                        self.entropy = 'binary'
 
-            if self.multievent == False:
-                self.entropy = 'notbinary'
+                if self.multievent == False:
+                    self.entropy = 'notbinary'
 
     def PrepareNet(self):
         
