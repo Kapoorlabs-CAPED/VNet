@@ -22,7 +22,12 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
-        
+        "keras",
+        "napari",
+        "numpy",
+        "tensorflow",
+        "tifffile",
+        "vollseg",
         "oneat",
        
     ],
