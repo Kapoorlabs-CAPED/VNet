@@ -1,16 +1,14 @@
 import os
-import sys
 import tensorflow as tf
 from oneat.NEATModels.nets import Concat
-from oneat.NEATModels.loss import diamond_yolo_loss, class_yolo_loss, static_yolo_loss_segfree,static_yolo_loss, dynamic_yolo_loss
-from pathlib import Path
+from oneat.NEATModels.loss import  static_yolo_loss, dynamic_yolo_loss
 from oneat.NEATUtils.utils import  load_json, normalizeFloatZeroOne
 import numpy as np
 from keras import models
 from keras.models import load_model
 from tifffile import imread
 import napari
-from vollseg import VollSeg, CARE, UNET, StarDist2D, StarDist3D, MASKUNET
+from vollseg import CARE, UNET, StarDist2D, StarDist3D
 class VizOneat(object):
 
     def __init__(self,  config, imagename, model_dir, model_name, oneat_vollnet = False,
@@ -119,12 +117,7 @@ class VizOneat(object):
         
         if self.normalize: 
             self.image = normalizeFloatZeroOne(self.image, 1, 99.8, dtype = self.dtype)
-            
-        if self.oneat_vollnet: 
-            
-            self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1])  
-            self.yololoss = diamond_yolo_loss(self.categories, self.gridx, self.gridy, self.gridz, self.nboxes,
-                                            self.box_vector, self.entropy, self.yolo_v0, self.yolo_v1, self.yolo_v2)
+      
         
         if self.oneat_cnnnet:
             self.pad_width = (self.image.shape[-3], self.image.shape[-2], self.image.shape[-1]) 
